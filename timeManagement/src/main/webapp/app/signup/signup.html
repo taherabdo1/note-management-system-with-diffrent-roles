@@ -1,1 +1,57 @@
-jnsd
+	<div class="site-content">
+
+		<main class="main-content">
+		<div class="container"></div>
+
+		<div class="fullwidth-block">
+			<div class="container">
+
+				<div class="col-md-7 col-md-offset-4">
+					<h2 class="section-title">Sign Up</h2>
+
+					<form name="signupForm" method="post" class="contact-form">
+
+						<div class="row">
+							<div class="col-md-6">
+								<input ng-model="firstName" type="text" placeholder="First Name..." required />
+							</div>
+							<div class="col-md-5" style="padding: 10px"></div>
+						</div>
+						
+						<div class="row">
+							<div class="col-md-6">
+								<input ng-model="lastName" type="text" placeholder="Last Name..." required />
+							</div>
+							<div class="col-md-5" style="padding: 10px"></div>
+						</div>
+						<div class="row">
+							<div class="col-md-6">
+								<input ng-model="email" type="email"
+									placeholder="Email Addresss..." required />
+							</div>
+							<div class="col-md-5" style="padding: 10px"></div>
+						</div>
+
+						<div class="row">
+							<div class="col-md-6">
+								<input ng-model="password" type="password"
+									placeholder="Password..." required/>
+							</div>
+							<div class="col-md-5" style="padding: 10px"></div>
+						</div>
+
+						<div class="text">
+							<button ng-click="signup()"
+								style="padding-left: 50px; padding-right: 50px">SignUp</button>
+							<label style="padding: 10px; margin-left: 20px">{{errorMessage}}</label>
+						</div>
+
+					</form>
+
+
+				</div>
+			</div>
+		</div>
+
+		</main>
+	</div>

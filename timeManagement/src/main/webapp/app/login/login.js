@@ -4,16 +4,29 @@ angular.module('myApp.login', ['ngRoute'])
 
 
 
-.controller('LoginCtrl', function($scope , $http) {
+.controller('LoginCtrl', function($scope , $http , $log , $rootScope) {
 	$scope.login = function(){
-//		$scope.userInfo = $scope.userName + $scope.password;	
-		$http.post("http://localhost:8081/timeManagement/rest/note/getNote" ,{ id: '2' }
-)
+		
+		var  loginData = {
+				"email" : $scope.email,
+				"password" : $scope.password
+				};
+		$http.post("http://localhost:8081/timeManagement/rest/user/signin" ,loginData)
     	.then(function(response) {
-        $scope.userInfo = response.data;
+    		if (response.data.token == "null") {
+	    		$log.log("error");
+    			$scope.successMessage = "Invalid email and password";
+//				$location.path("/login");
+			} else {
+				$rootScope.token = response.data.token;
+	  			$scope.successMessage = "User has been created successfully";
+	  			$log.log("user logged in");
+	  			$log.log(response.data.token);	
+			}
+        $scope.note = response.data;
     });
 	};
-})
+});
 
 
 

@@ -3,6 +3,7 @@
 // Declare app level module which depends on views, and components
 angular.module('myApp', [
   'ngRoute',
+  'myApp.notes',
   'myApp.view1',
   'myApp.view2',
   'myApp.login',
@@ -15,13 +16,14 @@ angular.module('myApp', [
   $routeProvider.otherwise({redirectTo: '/view1'});
 }])
 .config(['$routeProvider', function($routeProvider) {
-  $routeProvider.when('/login', {
+  $routeProvider
+  .when('/login', {
     templateUrl: 'login/login.html',
     controller: 'LoginCtrl'
   })
-  .when('/view1', {
-    templateUrl: 'view1/view1.html',
-    controller: 'View1Ctrl'
+  .when('/notes', {
+    templateUrl: 'note/showNotes.html',
+    controller: 'NotesCtrl'
   })
   .when('/view2', {
     templateUrl: 'view2/view2.html',
