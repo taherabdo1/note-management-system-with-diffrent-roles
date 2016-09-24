@@ -1,0 +1,91 @@
+package model;
+
+import java.io.Serializable;
+
+import javax.persistence.*;
+
+//import org.codehaus.jackson.annotate.JsonIgnore;
+
+import java.util.Date;
+
+
+/**
+ * The persistent class for the note database table.
+ * 
+ */
+@Entity
+@NamedQuery(name="Note.findAll", query="SELECT n FROM Note n")
+public class Note extends GenericEntity implements Serializable {
+	private static final long serialVersionUID = 1L;
+
+	@Id
+	@GeneratedValue(strategy=GenerationType.AUTO)
+	private int id;
+
+	private String description;
+
+	private float period;
+
+	@Column(name="preferred_working_hour_per_day")
+	private float preferredWorkingHourPerDay;
+
+	@Temporal(TemporalType.DATE)
+	@Column(name="start_date")
+	private Date startDate;
+
+	//bi-directional many-to-one association to User
+	@ManyToOne
+	private User user;
+
+	public Note() {
+	}
+
+	public int getId() {
+		return this.id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
+	}
+
+	public String getDescription() {
+		return this.description;
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
+	}
+
+	public float getPeriod() {
+		return this.period;
+	}
+
+	public void setPeriod(float period) {
+		this.period = period;
+	}
+
+	public float getPreferredWorkingHourPerDay() {
+		return this.preferredWorkingHourPerDay;
+	}
+
+	public void setPreferredWorkingHourPerDay(float preferredWorkingHourPerDay) {
+		this.preferredWorkingHourPerDay = preferredWorkingHourPerDay;
+	}
+
+	public Date getStartDate() {
+		return this.startDate;
+	}
+
+	public void setStartDate(Date startDate) {
+		this.startDate = startDate;
+	}
+
+	public User getUser() {
+		return this.user;
+	}
+
+	public void setUser(User user) {
+		this.user = user;
+	}
+
+}

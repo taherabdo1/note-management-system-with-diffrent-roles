@@ -7,11 +7,12 @@
 	<servlet>
 		<servlet-name>jersey-serlvet</servlet-name>
 		<servlet-class>com.sun.jersey.spi.container.servlet.ServletContainer</servlet-class>
-	<!--  	<init-param>
-			<param-name>com.sun.jersey.config.property.packages</param-name>
-			<param-value>com.toptal.services</param-value>
+		<!-- <servlet-name>Jersey REST Service</servlet-name> <servlet-class>org.glassfish.jersey.servlet.ServletContainer</servlet-class> -->
+		<init-param>
+			<param-name>com.sun.jersey.spi.container.ContainerRequestFilters</param-name>
+			<param-value>filters.AuthenticationFilter</param-value>
 		</init-param>
-		-->
+
 		<init-param>
 			<param-name>com.sun.jersey.api.json.POJOMappingFeature</param-name>
 			<param-value>true</param-value>

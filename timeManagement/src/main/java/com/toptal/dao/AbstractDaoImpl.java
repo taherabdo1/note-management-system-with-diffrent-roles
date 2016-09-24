@@ -1,5 +1,6 @@
 package com.toptal.dao;
 
+import java.util.List;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -82,9 +83,12 @@ public abstract class AbstractDaoImpl<T> implements AbstractDao<T> {
 	public void delete(T entity) {
 		try {
 			em = getEntityManager();
+			em.getTransaction().begin();
 			T rem = em.merge(entity);
 			em.remove(rem);
 			em.flush();
+			em.getTransaction().commit();
+			em.close();
 		} catch (PersistenceException ex) {
 			log.log(Level.SEVERE, "unable to persist " + type.getSimpleName(),
 					ex);
@@ -93,19 +97,19 @@ public abstract class AbstractDaoImpl<T> implements AbstractDao<T> {
 	}
 
 	@Override
-	public Set<T> getAll() {
+	public List<T> getAll() {
 		try {
 			em = getEntityManager();
 			em.getTransaction().begin();
 
-			Set<T> list = (Set<T>) em.createQuery(
+			List<T> list = (List<T>) em.createQuery(
 					" select t from " + type.getSimpleName() + " t")
 					.getResultList();
 			em.getTransaction().commit();
 			em.close();
 			return list;
 		} catch (PersistenceException ex) { // to log the exception
-			log.log(Level.SEVERE, "unable to update " + type.getSimpleName(),
+			log.log(Level.SEVERE, "unable to getAll " + type.getSimpleName(),
 					ex);
 			throw ex;
 		}
