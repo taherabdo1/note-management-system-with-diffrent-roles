@@ -6,7 +6,8 @@ import java.util.logging.Level;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceException;
 
-import model.User;
+import model.*;
+
 import com.toptal.dao.AbstractDaoImpl;
 
 public class UserDao extends AbstractDaoImpl<User> {
@@ -38,7 +39,7 @@ public class UserDao extends AbstractDaoImpl<User> {
 		}
 	}
 
-	public User signIn(String email, String password) {
+	public User signIn(String email, String password) throws Exception{
 		EntityManager em;
 		try {
 			em = getEntityManager();

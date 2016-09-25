@@ -5,8 +5,9 @@ import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
-import com.toptal.dao.*;
 import model.*;
+
+import com.toptal.dao.*;
 
 //import com.toptal.entities.User;
 //import com.toptal.entities.Role;
@@ -28,7 +29,7 @@ public class App
 	public String getTrackInJSON() {
 
 		UserDao dao = new UserDao();
-		User userTest = new User("abdo@gmail.com" , "abdo" , "ahmed" , "123" , "admin");
+		User userTest = new User("abdo12345@gmail.com" , "abdo" , "ahmed" , "123" , "admin");
 		dao.persist(userTest);
 		String track = dao.findByID(1).getEmail();
 

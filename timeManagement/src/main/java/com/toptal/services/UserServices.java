@@ -3,6 +3,7 @@ package com.toptal.services;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
@@ -16,21 +17,29 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
+import model.*;
+
 import org.codehaus.jackson.JsonGenerationException;
 import org.codehaus.jackson.map.JsonMappingException;
 import org.codehaus.jackson.map.ObjectMapper;
 
 import utils.Credentials;
 
+
+
+
+
+import utils.TokenUtils;
+
 //import com.google.gson.Gson;
 //import com.google.gson.Gson;
 import com.toptal.dao.UserDao;
-
-import model.*;
+import com.toptal.filters.AuthenticationFilter;
 
 @Path("/user")
 public class UserServices {
 
+	
 	@GET
 	@Path("/getAllUsers")
 	@Produces(MediaType.APPLICATION_JSON)
@@ -87,21 +96,30 @@ public class UserServices {
 	@Path("/signin")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response signIn(Credentials userCredentials) {
-		System.out.println("email:" + userCredentials.getEmail()
-				+ " and password : " + userCredentials.getPassword());
+	public Response signIn(String userCredentials) {
 		UserDao userDao = new UserDao();
 		try {
-			User loggedUser = userDao.signIn(userCredentials.getEmail(),
-				userCredentials.getPassword());
-		loggedUser.setNotes(new ArrayList());
+			ObjectMapper mapper = new ObjectMapper();
+			Credentials userCredentialsObject = mapper.readValue(userCredentials, Credentials.class);
+			System.out.println("email:" + userCredentialsObject.getEmail()
+					+ " and password : " + userCredentialsObject.getPassword());
+
+			User loggedUser = userDao.signIn(userCredentialsObject.getEmail(),
+					userCredentialsObject.getPassword());
+			loggedUser.setNotes(new ArrayList());
+			//issue a token and relate it to the user in the map inside Authentication filter
+			String token = TokenUtils.getToken();
+			while (AuthenticationFilter.tokens.get(token) != null) {
+				token=TokenUtils.getToken();
+			}
+			AuthenticationFilter.tokens.put(token , loggedUser);
+			
 		System.out.println("user logged in and the first name is: "
 				+ loggedUser.getFirstName());
 
-		ObjectMapper mapper = new ObjectMapper();
 
 //			String jsonInString = mapper.writeValueAsString(loggedUser);
-			String returnString = "{\"token\" :"+" \"jfsgskjksjfgksjfsghfjkghgsg\"}";
+			String returnString = "{\"token\" :"+" \""+token+"\"}";
 			return Response.status(Status.OK).entity(returnString).build();
 		} catch (Exception e) {
 			// TODO Auto-generated catch block

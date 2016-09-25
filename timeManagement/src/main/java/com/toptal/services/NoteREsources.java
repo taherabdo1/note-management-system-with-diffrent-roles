@@ -13,67 +13,86 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
-import org.codehaus.jackson.map.ObjectMapper;
-
-import utils.NoteWithAtoken;
-import utils.Secured;
 import model.Note;
 import model.User;
 
+import org.codehaus.jackson.map.ObjectMapper;
+
+import utils.Credentials;
+import utils.NoteWithAtoken;
+import utils.Secured;
+
 import com.toptal.dao.*;
+import com.toptal.filters.AuthenticationFilter;
 
 @Path("/note")
 public class NoteREsources {
 
-	//to be upodated
+	// to be upodated
 	@POST
 	@Path("/add")
-	@Consumes(MediaType.APPLICATION_JSON)
-	public String add(NoteWithAtoken noteWithAtoken) {
-			//use userToken to get the user data
-		Note note = noteWithAtoken.getNote();
-		try{
-		UserDao userDao = new UserDao();
-		NoteDao noteDao = new NoteDao();
-		//use the token to get User
-		User user = userDao.findByEmail("abdo@gmail.com");
-		note.setUser(user);
-		noteDao.persist(note);
-		return "{\"added\" : \"true\"}"; 
-		}catch(Exception e){
-			return "{\"added\" : \"false\"}"; 
+//	@Consumes(MediaType.APPLICATION_JSON)
+	public String add(String noteWithAtokenJsonString) {
+		try {
+			ObjectMapper mapper = new ObjectMapper();
+			NoteWithAtoken noteWithAtoken = mapper.readValue(
+					noteWithAtokenJsonString, NoteWithAtoken.class);
+			Note note = noteWithAtoken.getNote();
+			// use userToken to get the user data
+			User user = AuthenticationFilter.tokens.get(noteWithAtoken.getToken());
+
+			System.out.println("note desc from create resource:"
+					+ note.getDescription());
+
+			UserDao userDao = new UserDao();
+			NoteDao noteDao = new NoteDao();
+//			// use the token to get User
+//			user = userDao.findByEmail("abdo@gmail.com");
+			note.setUser(user);
+			noteDao.persist(note);
+			return "{\"added\" : \"true\"}";
+		} catch (Exception e) {
+			return "{\"added\" : \"false\"}";
 		}
 	}
 
 	@POST
 	@Path("/delete")
-	@Consumes(MediaType.APPLICATION_JSON)
-	public String delete(Note note) {
+	// @Consumes(MediaType.APPLICATION_JSON)
+	public String delete(String noteId) {
 		try {
+			System.out.println("noteId: " + noteId);
 			NoteDao noteDao = new NoteDao();
+			Note note = new Note();
+			note.setId(Integer.parseInt(noteId));
 			noteDao.delete(note);
 			System.out.println("deleted");
-			return "{\"deleted\" : \"true\"}"; 
-		}catch(Exception e) {
+			return "{\"deleted\" : \"true\"}";
+		} catch (Exception e) {
 			e.printStackTrace();
-			return "{\"deleted\" : \"false\"}"; 
+			return "{\"deleted\" : \"false\"}";
 		}
 	}
 
 	@POST
 	@Path("/update")
-	@Consumes(MediaType.APPLICATION_JSON)
-	public String update(Note note) {
+	// @Consumes(MediaType.APPLICATION_JSON)
+	public String update(String noteJsonString) {
 		// System.out.println("email:" +user.getEmail()+ " and password : "
 		// +user.getPassword());
 		try {
-		NoteDao noteDao = new NoteDao();
-		noteDao.update(note);
-		System.out.println("updated");
-		return "{\"updated\" : \"true\"}"; 
+			ObjectMapper mapper = new ObjectMapper();
+			Note note = mapper.readValue(noteJsonString, Note.class);
+			System.out.println("note desc from update resource:"
+					+ note.getDescription());
 
-		}catch(Exception e){
-			return "{\"updated\" : \"false\"}"; 			
+			NoteDao noteDao = new NoteDao();
+			noteDao.update(note);
+			System.out.println("updated");
+			return "{\"updated\" : \"true\"}";
+
+		} catch (Exception e) {
+			return "{\"updated\" : \"false\"}";
 		}
 	}
 
@@ -83,10 +102,12 @@ public class NoteREsources {
 	public Response getAllOfUser(String token) {
 		NoteDao noteDao = new NoteDao();
 		try {
-
+			System.out.println("token from getAllOfUser:" + token);
 			// temp to be updated from the token map
-			User user = new User();
-			user.setId(2);
+			User user = AuthenticationFilter.tokens.get(token);
+			System.out.println("user email from getAllOfUser: "
+					+ user.getEmail());
+			// user.setId(token);
 			List<Note> notes = new ArrayList<Note>(noteDao.getAllOfUser(user));
 			for (Note note : notes) {
 				note.setUser(null);
