@@ -15,6 +15,7 @@ import javax.ws.rs.core.Response.Status;
 
 import org.codehaus.jackson.map.ObjectMapper;
 
+import utils.NoteWithAtoken;
 import utils.Secured;
 import model.Note;
 import model.User;
@@ -24,15 +25,24 @@ import com.toptal.dao.*;
 @Path("/note")
 public class NoteREsources {
 
+	//to be upodated
 	@POST
 	@Path("/add")
 	@Consumes(MediaType.APPLICATION_JSON)
-	public void add(Note note) {
+	public String add(NoteWithAtoken noteWithAtoken) {
+			//use userToken to get the user data
+		Note note = noteWithAtoken.getNote();
+		try{
 		UserDao userDao = new UserDao();
 		NoteDao noteDao = new NoteDao();
+		//use the token to get User
 		User user = userDao.findByEmail("abdo@gmail.com");
 		note.setUser(user);
 		noteDao.persist(note);
+		return "{\"added\" : \"true\"}"; 
+		}catch(Exception e){
+			return "{\"added\" : \"false\"}"; 
+		}
 	}
 
 	@POST
@@ -53,12 +63,18 @@ public class NoteREsources {
 	@POST
 	@Path("/update")
 	@Consumes(MediaType.APPLICATION_JSON)
-	public void update(Note note) {
+	public String update(Note note) {
 		// System.out.println("email:" +user.getEmail()+ " and password : "
 		// +user.getPassword());
+		try {
 		NoteDao noteDao = new NoteDao();
 		noteDao.update(note);
-		System.out.println("deleted");
+		System.out.println("updated");
+		return "{\"updated\" : \"true\"}"; 
+
+		}catch(Exception e){
+			return "{\"updated\" : \"false\"}"; 			
+		}
 	}
 
 	@POST

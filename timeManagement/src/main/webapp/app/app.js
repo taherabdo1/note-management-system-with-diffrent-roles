@@ -28,7 +28,7 @@ angular.module('myApp', [
   })
     .when('/addEditNote', {
     templateUrl: 'note/addEditNote.html',
-    controller: 'NotesCtrl'
+    controller: 'addEditNoteCtrl'
   })
   .when('/view2', {
     templateUrl: 'view2/view2.html',
