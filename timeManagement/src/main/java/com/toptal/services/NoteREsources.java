@@ -38,12 +38,16 @@ public class NoteREsources {
 	@POST
 	@Path("/delete")
 	@Consumes(MediaType.APPLICATION_JSON)
-	public void delete(Note note) {
-		// System.out.println("email:" +user.getEmail()+ " and password : "
-		// +user.getPassword());
-		NoteDao noteDao = new NoteDao();
-		noteDao.delete(note);
-		System.out.println("deleted");
+	public String delete(Note note) {
+		try {
+			NoteDao noteDao = new NoteDao();
+			noteDao.delete(note);
+			System.out.println("deleted");
+			return "{\"deleted\" : \"true\"}"; 
+		}catch(Exception e) {
+			e.printStackTrace();
+			return "{\"deleted\" : \"false\"}"; 
+		}
 	}
 
 	@POST
@@ -60,11 +64,12 @@ public class NoteREsources {
 	@POST
 	@Path("/getAllOfUser")
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response getAllOfUser(User user) {
+	public Response getAllOfUser(String token) {
 		NoteDao noteDao = new NoteDao();
 		try {
 
 			// temp to be updated from the token map
+			User user = new User();
 			user.setId(2);
 			List<Note> notes = new ArrayList<Note>(noteDao.getAllOfUser(user));
 			for (Note note : notes) {

@@ -1,1 +1,31 @@
-<p>This is the partial for show notes</p>
+ Hi {{userName}}
+<table>
+	<thead>
+		<!-- <tr><th colspan="4">Your Notes</th></tr>
+       -->
+		<tr>
+			<th>Id &nbsp;</th>
+			<th>Description &nbsp;</th>
+			<th>start Date &nbsp;</th>
+			<th>period &nbsp;</th>
+			<th>preferred Working Hour Per Day</th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr ng-repeat="note in notes">
+			<td>{{note.id}} &nbsp;</td>
+			<td>{{note.description}} &nbsp;</td>
+			<td>{{note.startDate}} &nbsp;</td>
+			<td>{{note.period}} &nbsp;</td>
+			<td>{{note.preferredWorkingHourPerDay}} &nbsp;</td>
+			<td><button ng-click="deleteNote($index)" style="padding-left: 50px;
+				padding-right: 50px">delete
+				</button>
+			</td>
+			<td><button ng-click="updateNote($index)" style="padding-left: 50px;
+				padding-right: 50px">update
+				</button>
+			</td>
+		</tr>
+	</tbody>
+</table>

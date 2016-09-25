@@ -4,7 +4,7 @@ angular.module('myApp.login', ['ngRoute'])
 
 
 
-.controller('LoginCtrl', function($scope , $http , $log , $rootScope) {
+.controller('LoginCtrl', function($scope , $http , $log , $rootScope , $location) {
 	$scope.login = function(){
 		
 		var  loginData = {
@@ -19,9 +19,11 @@ angular.module('myApp.login', ['ngRoute'])
 //				$location.path("/login");
 			} else {
 				$rootScope.token = response.data.token;
+				$rootScope.userName = $scope.email;
 	  			$scope.successMessage = "User has been created successfully";
 	  			$log.log("user logged in");
-	  			$log.log(response.data.token);	
+	  			$log.log(response.data.token);
+				$location.path("/notes");
 			}
         $scope.note = response.data;
     });
