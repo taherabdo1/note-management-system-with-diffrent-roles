@@ -2,7 +2,7 @@
 
 angular.module('myApp.signup', ['ngRoute'])
 
-.controller('SignupCtrl', function($scope,$location, $location , $http , $log) {
+.controller('SignupCtrl', function($scope, $rootScope, $location, $location , $http , $log) {
 
 //	$scope.showSuccessMessage = false;
 
@@ -30,5 +30,11 @@ angular.module('myApp.signup', ['ngRoute'])
 			}
     });
 	};
+	
+	//to prevent from log in if he is already loged in
+	$log.log("from login token from rootScope: "+$rootScope.token);
+	if (typeof ($rootScope.token) != 'undefined'){
+		$location.path("/notes");
+	}
 });
 

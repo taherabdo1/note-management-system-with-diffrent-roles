@@ -25,16 +25,12 @@ app
 								.then(
 										function(response) {
 
-											if (response.data.token == "null") {
-												$log.log(response.data);
-												$scope.successMessage = "you need to login before that";
-												$location.path("/login");
-											} else {
+
 												$log.log("notes came back");
 												$scope.notes = response.data;
 												$log.log(response.data);
-											}
-											$scope.note = response.data;
+
+//												$scope.note = response.data;
 										},
 										function(response){
 											$location.path("/login");

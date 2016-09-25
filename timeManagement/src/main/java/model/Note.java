@@ -4,8 +4,7 @@ import java.io.Serializable;
 
 import javax.persistence.*;
 
-//import org.codehaus.jackson.annotate.JsonIgnore;
-
+import java.sql.Time;
 import java.util.Date;
 
 
@@ -27,7 +26,7 @@ public class Note extends GenericEntity implements Serializable {
 	private float period;
 
 	@Column(name="preferred_working_hour_per_day")
-	private float preferredWorkingHourPerDay;
+	private Time preferredWorkingHourPerDay;
 
 	@Temporal(TemporalType.DATE)
 	@Column(name="start_date")
@@ -64,11 +63,11 @@ public class Note extends GenericEntity implements Serializable {
 		this.period = period;
 	}
 
-	public float getPreferredWorkingHourPerDay() {
+	public Time getPreferredWorkingHourPerDay() {
 		return this.preferredWorkingHourPerDay;
 	}
 
-	public void setPreferredWorkingHourPerDay(float preferredWorkingHourPerDay) {
+	public void setPreferredWorkingHourPerDay(Time preferredWorkingHourPerDay) {
 		this.preferredWorkingHourPerDay = preferredWorkingHourPerDay;
 	}
 
