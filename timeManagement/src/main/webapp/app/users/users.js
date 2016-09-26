@@ -98,7 +98,7 @@ usersApp.controller('AddEditUserCtrl', function($scope, $rootScope, $http,
 			$http(updateUserReq).then(function(response) {
 				if (response.data.updated == "true") {
 					$rootScope.userToBeUpdated = null;
-					$location.path("/notes");
+					$location.path("/users");
 				} else {
 					$log.log("can't be update the user");
 				}

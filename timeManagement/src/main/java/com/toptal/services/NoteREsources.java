@@ -38,11 +38,12 @@ public class NoteREsources {
 			NoteWithAtoken noteWithAtoken = mapper.readValue(
 					noteWithAtokenJsonString, NoteWithAtoken.class);
 			Note note = noteWithAtoken.getNote();
+			System.out.println("note desc from create resource:"
+					+ note.getDescription());
+
 			// use userToken to get the user data
 			User user = AuthenticationFilter.tokens.get(noteWithAtoken.getToken());
 
-			System.out.println("note desc from create resource:"
-					+ note.getDescription());
 
 			UserDao userDao = new UserDao();
 			NoteDao noteDao = new NoteDao();

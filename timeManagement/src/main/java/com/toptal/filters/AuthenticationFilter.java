@@ -43,19 +43,13 @@ public class AuthenticationFilter implements ContainerRequestFilter , ContainerR
 			throws IOException {
 	/////////////
 		System.out.println("inside the constructor");
-		if(tokens.get(requestContext.getHeaderString("Authorization")) == null && !request.getPathInfo().contains("signin")){
+		if(tokens.get(requestContext.getHeaderString("Authorization")) == null && !request.getPathInfo().contains("signin")&& !request.getPathInfo().contains("signup")){
 			requestContext.abortWith(Response.status(
 					Response.Status.UNAUTHORIZED).build());			
 		}
 		System.out.println("request headers: "+requestContext.getHeaders());
 		System.out.println("token from headers in filter: "+requestContext.getHeaderString("Authorization"));
 		
-//		for(Object param : requestContext.getUriInfo().getPathParameters()){
-//			System.out.println(param);
-//			
-//		}
-		//////////
-		System.out.println(requestContext.getProperty("token"));
 		System.out.println(tokens.size());
 		// Get the HTTP Authorization header from the request
 		// String authorizationHeader = requestContext
