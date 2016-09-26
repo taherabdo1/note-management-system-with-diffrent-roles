@@ -22,6 +22,8 @@ import javax.ws.rs.core.Response;
 
 
 
+
+import utils.AuthenticationServiceHelper;
 import model.*;
 
 //@Secured
@@ -30,7 +32,7 @@ import model.*;
 
 public class AuthenticationFilter implements ContainerRequestFilter , ContainerResponseFilter{
 
-	public static Map<String, User> tokens = new HashMap<>();
+//	public static Map<String, User> tokens = new HashMap<>();
 	@Context
 	HttpServletRequest request;
 
@@ -43,14 +45,14 @@ public class AuthenticationFilter implements ContainerRequestFilter , ContainerR
 			throws IOException {
 	/////////////
 		System.out.println("inside the constructor");
-		if(tokens.get(requestContext.getHeaderString("Authorization")) == null && !request.getPathInfo().contains("signin")&& !request.getPathInfo().contains("signup")){
+		if(AuthenticationServiceHelper.tokens.get(requestContext.getHeaderString("Authorization")) == null && !request.getPathInfo().contains("signin")&& !request.getPathInfo().contains("signup")){
 			requestContext.abortWith(Response.status(
 					Response.Status.UNAUTHORIZED).build());			
 		}
 		System.out.println("request headers: "+requestContext.getHeaders());
 		System.out.println("token from headers in filter: "+requestContext.getHeaderString("Authorization"));
 		
-		System.out.println(tokens.size());
+		System.out.println(AuthenticationServiceHelper.tokens.size());
 		// Get the HTTP Authorization header from the request
 		// String authorizationHeader = requestContext
 		// .getHeaderString(HttpHeaders.AUTHORIZATION);

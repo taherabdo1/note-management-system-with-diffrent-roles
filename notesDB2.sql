@@ -14,7 +14,7 @@ CREATE  TABLE IF NOT EXISTS `notesDB`.`user` (
   `password` VARCHAR(100) NOT NULL ,
   `first_name` VARCHAR(50) NULL ,
   `last_name` VARCHAR(50) NULL ,
-  `role` VARCHAR(10) NULL ,
+  `role` VARCHAR(10) NOT NULL ,
   PRIMARY KEY (`id`) )
 ENGINE = InnoDB;
 
@@ -27,7 +27,7 @@ CREATE  TABLE IF NOT EXISTS `notesDB`.`note` (
   `description` VARCHAR(500) NOT NULL ,
   `start_date` DATE NOT NULL ,
   `period` FLOAT NOT NULL ,
-  `preferred_working_hour_per_day` FLOAT NOT NULL ,
+  `preferred_working_hour_per_day` TIME ,
   `user_id` INT NOT NULL ,
   PRIMARY KEY (`id`) ,
   INDEX `fk_note_user_idx` (`user_id` ASC) ,

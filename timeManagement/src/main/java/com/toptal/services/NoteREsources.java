@@ -18,6 +18,7 @@ import model.User;
 
 import org.codehaus.jackson.map.ObjectMapper;
 
+import utils.AuthenticationServiceHelper;
 import utils.Credentials;
 import utils.NoteWithAtoken;
 import utils.Secured;
@@ -42,7 +43,7 @@ public class NoteREsources {
 					+ note.getDescription());
 
 			// use userToken to get the user data
-			User user = AuthenticationFilter.tokens.get(noteWithAtoken.getToken());
+			User user = AuthenticationServiceHelper.tokens.get(noteWithAtoken.getToken());
 
 
 			UserDao userDao = new UserDao();
@@ -103,7 +104,7 @@ public class NoteREsources {
 		try {
 			System.out.println("token from getAllOfUser:" + token);
 			// temp to be updated from the token map
-			User user = AuthenticationFilter.tokens.get(token);
+			User user = AuthenticationServiceHelper.tokens.get(token);
 			System.out.println("user email from getAllOfUser: "
 					+ user.getEmail());
 			// user.setId(token);

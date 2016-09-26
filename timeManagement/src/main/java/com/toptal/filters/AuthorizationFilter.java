@@ -11,6 +11,7 @@ import javax.ws.rs.container.ContainerRequestFilter;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
 
+import utils.AuthenticationServiceHelper;
 import model.User;
 
 public class AuthorizationFilter implements ContainerRequestFilter {
@@ -31,40 +32,65 @@ public class AuthorizationFilter implements ContainerRequestFilter {
 
 		System.out.println("inside the authrization filter");
 
-		User user = AuthenticationFilter.tokens.get(requestContext
+		User user = AuthenticationServiceHelper.tokens.get(requestContext
 				.getHeaderString("Authorization"));
-		System.out.println("user token from authorization filter: "+requestContext.getHeaderString("Authorization"));
-		System.out.println(" and the path is: "+request.getPathInfo());
+		System.out.println("user token from authorization filter: "
+				+ requestContext.getHeaderString("Authorization"));
+		System.out.println(" and the path is: " + request.getPathInfo());
+
+		System.out.println("Authorization header not equal null:"
+				+ !"p82ls04eh19k998supqotgffut".equals(null));
+		System.out.println("Authorization header != null:"
+				+ ("p82ls04eh19k998supqotgffut" != null));
+		System.out.println("Authorization header not equal null:"
+				+ !"p82ls04eh19k998supqotgffut".equals(""));
+		System.out.println("Authorization header != null:"
+				+ ("p82ls04eh19k998supqotgffut" != ""));
+
 		// if signin or signup don't filter
 		if (request.getPathInfo().equals("/user/signin")
 				|| request.getPathInfo().equals("/user/signup")) {
 			return;
 		}
-		// if the user role is ADMIN then he has all the previllages
-		else if (user.getRole().equalsIgnoreCase("admin")) {
-			System.out.println("user role from authorization filter: "
-					+ user.getRole());
-			return;
-		}
-		// if the user is manager and he has previllage to go for this path
-		else if (user.getRole().equalsIgnoreCase("manager")
-				|| Arrays.asList(userPages).contains(request.getPathInfo())) {
-			if (Arrays.asList(managerPages).contains(request.getPathInfo()))
+		// this means the user is not logged in and request pages other than
+		// signin and signup
+
+		// else if (!"".equals(requestContext.getHeaderString("Authorization"))
+		// &&!requestContext.getHeaderString("Authorization").equals(null)) {
+
+		// System.out.println("user role from authorization filter: ");
+		// System.out.println("user role from authorization filter role: " +
+		// user.getRole());
+		try {
+			// if the user role is ADMIN then he has all the previllages
+			if (user.getRole().equalsIgnoreCase("admin")) {
 				System.out.println("user role from authorization filter: "
 						+ user.getRole());
-			return;
-		}
-		// if the user is user and he has previllage to go for this path
-		else if (user.getRole().equalsIgnoreCase("user")
-				&& Arrays.asList(userPages).contains(request.getPathInfo())) {
-			System.out.println("user role from authorization filter: "
-					+ user.getRole());
-			return;
-		}
-		// otherwise return unauthorized
-		else {
-			System.out.println("user role from authorization filter: "
-					+ user.getRole());
+				return;
+			}
+			// if the user is manager and he has previllage to go for this path
+			else if (user.getRole().equalsIgnoreCase("manager")) {
+				if (Arrays.asList(managerPages).contains(request.getPathInfo())
+						|| Arrays.asList(userPages).contains(
+								request.getPathInfo()))
+					System.out.println("user role from authorization filter: "
+							+ user.getRole());
+				return;
+			}
+			// if the user is user and he has previllage to go for this path
+			else if (user.getRole().equalsIgnoreCase("user")
+					&& Arrays.asList(userPages).contains(request.getPathInfo())) {
+				System.out.println("user role from authorization filter: "
+						+ user.getRole());
+				return;
+			}
+			// }
+			// otherwise return unauthorized
+			else {
+				requestContext.abortWith(Response.status(
+						Response.Status.UNAUTHORIZED).build());
+			}
+		} catch (NullPointerException ex) {
 			requestContext.abortWith(Response.status(
 					Response.Status.UNAUTHORIZED).build());
 		}

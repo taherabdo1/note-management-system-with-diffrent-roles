@@ -23,6 +23,7 @@ import org.codehaus.jackson.JsonGenerationException;
 import org.codehaus.jackson.map.JsonMappingException;
 import org.codehaus.jackson.map.ObjectMapper;
 
+import utils.AuthenticationServiceHelper;
 import utils.Credentials;
 
 
@@ -30,7 +31,7 @@ import utils.Credentials;
 
 
 import utils.NoteWithAtoken;
-import utils.TokenUtils;
+
 
 
 
@@ -114,16 +115,21 @@ public class UserServices {
 			System.out.println("email:" + userCredentialsObject.getEmail()
 					+ " and password : " + userCredentialsObject.getPassword());
 
+			if(AuthenticationServiceHelper.loggedUsers.contains(userCredentialsObject)){
+				System.out.println("this user already logged in");
+				return Response.status(Status.CONFLICT).entity("{\"token\":"+"\"already signed in\"}").build();
+			}
 			User loggedUser = userDao.signIn(userCredentialsObject.getEmail(),
 					userCredentialsObject.getPassword());
 			loggedUser.setNotes(new ArrayList());
 			//issue a token and relate it to the user in the map inside Authentication filter
-			String token = TokenUtils.getToken();
-			while (AuthenticationFilter.tokens.get(token) != null) {
-				token=TokenUtils.getToken();
+			String token = AuthenticationServiceHelper.getToken();
+			while (AuthenticationServiceHelper.tokens.get(token) != null) {
+				token=AuthenticationServiceHelper.getToken();
 			}
-			AuthenticationFilter.tokens.put(token , loggedUser);
-			
+			//the token to the map and the user to the loggedUsers List
+			AuthenticationServiceHelper.tokens.put(token , loggedUser);
+			AuthenticationServiceHelper.loggedUsers.add(loggedUser);
 		System.out.println("user logged in and the first name is: "
 				+ loggedUser.getFirstName());
 
