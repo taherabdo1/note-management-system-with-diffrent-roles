@@ -78,8 +78,6 @@ public class NoteREsources {
 	@Path("/update")
 	// @Consumes(MediaType.APPLICATION_JSON)
 	public String update(String noteJsonString) {
-		// System.out.println("email:" +user.getEmail()+ " and password : "
-		// +user.getPassword());
 		try {
 			ObjectMapper mapper = new ObjectMapper();
 			Note note = mapper.readValue(noteJsonString, Note.class);

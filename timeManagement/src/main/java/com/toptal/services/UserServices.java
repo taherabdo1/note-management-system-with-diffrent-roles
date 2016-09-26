@@ -29,7 +29,13 @@ import utils.Credentials;
 
 
 
+import utils.NoteWithAtoken;
 import utils.TokenUtils;
+
+
+
+
+
 
 //import com.google.gson.Gson;
 //import com.google.gson.Gson;
@@ -43,32 +49,36 @@ public class UserServices {
 	@GET
 	@Path("/getAllUsers")
 	@Produces(MediaType.APPLICATION_JSON)
-	public String getAllUsers() {
+	public Response getAllUsers() {
 		UserDao userDao = new UserDao();
-		// userDao.getAllUsers();
-		BaseResponse response = new BaseResponse();
+		try {
+			ObjectMapper mapper = new ObjectMapper();
+			List<User> users = new ArrayList<User>(userDao.getAllUsers());
+			String jsonInString = mapper.writeValueAsString(users);
+			System.out.println("user email at userServiceis: "+users.get(0).getEmail());
+			return Response.status(Status.OK).entity(jsonInString).build();
+		} catch (Exception e) {
+			return Response.status(Status.UNAUTHORIZED).entity("").build();
+		}
 
-		List<User> users = new ArrayList<User>(userDao.getAllUsers());
-		// if (users != null) {
-		// response.setStatus(2);
-		// response.setData(new Gson().toJson(users));
-		// } else {
-		// response.setStatus(3);
-		// }
-		// return response.toString();
-		// System.out.println(users.get(0).getEmail());
-		return "test";
 	}
 
 	//checked
 	@POST
 	@Path("/signup")
-	@Consumes(MediaType.APPLICATION_JSON)
+//	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
-	public String signUp(User user1) {
+	public String signUp(String userJsonString) {
 		UserDao userDao = new UserDao();
-
+		
 		try {
+			ObjectMapper mapper = new ObjectMapper();
+			User user1 = mapper.readValue(
+					userJsonString, User.class);
+
+			System.out.println("note desc from create resource:"
+					+ user1.getFirstName());
+
 			userDao.persist(user1);
 			return "{\"response\":\"DONE\"}";// Response.status(Status.OK).build();
 		} catch (Exception e) {
@@ -129,25 +139,43 @@ public class UserServices {
 
 	@POST
 	@Path("/update")
-	@Consumes(MediaType.APPLICATION_JSON)
-	public void update(User user) {
-		System.out.println("email:" + user.getEmail() + " and password : "
-				+ user.getPassword());
+//	@Consumes(MediaType.APPLICATION_JSON)
+	public String update(String userJsonString) {
+//		System.out.println("email:" + user.getEmail() + " and password : "
+//				+ user.getPassword());
+	try{	ObjectMapper mapper = new ObjectMapper();
+		User user= mapper.readValue(userJsonString, User.class);
+		System.out.println("user email from update resource:"
+				+ user.getEmail());
+
 		UserDao userDao = new UserDao();
 		User loggedUser = userDao.update(user);
 		System.out.println("user logged in and the first name is: "
 				+ loggedUser.getFirstName());
+		return "{\"updated\" : \"true\"}";
+
+	}catch(Exception e){
+		return "{\"updated\" : \"false\"}";
+
+	}
 	}
 
 	@POST
 	@Path("/delete")
-	@Consumes(MediaType.APPLICATION_JSON)
-	public void delete(User user) {
-		System.out.println("email:" + user.getEmail() + " and password : "
-				+ user.getPassword());
+//	@Consumes(MediaType.APPLICATION_JSON)
+	public String delete(String userEmail) {
+	try{
+		System.out.println("email:" + userEmail);
 		UserDao userDao = new UserDao();
+		User user = new User();
+		user.setEmail(userEmail);
 		userDao.deleteUser(user);
 		System.out.println("deleted");
+		return "{\"deleted\" : \"true\"}";
+	} catch (Exception e) {
+		e.printStackTrace();
+		return "{\"deleted\" : \"false\"}";
+	}
 	}
 
 }

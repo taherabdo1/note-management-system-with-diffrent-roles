@@ -8,6 +8,7 @@ angular.module('myApp', [
   'myApp.notes',
   'myApp.login',
   'myApp.signup',
+  'myApp.users',
   'myApp.version'
 ])
 .config(['$locationProvider', '$routeProvider', function($locationProvider, $routeProvider) {
@@ -26,16 +27,24 @@ angular.module('myApp', [
     templateUrl: 'note/showNotes.html',
     controller: 'NotesCtrl'
   })
-    .when('/addEditNote', {
+  .when('/addEditNote', {
     templateUrl: 'note/addEditNote.html',
     controller: 'addEditNoteCtrl'
   })
-  .when('/view2', {
-    templateUrl: 'view2/view2.html',
-    controller: 'View2Ctrl'
+  .when('/users', {
+    templateUrl: 'users/showAllUsers.html',
+    controller: 'UsersCtrl'
+  })
+     .when('/addEditUser', {
+    templateUrl: 'users/addEditUser.html',
+    controller: 'AddEditUserCtrl'
   })
   .when('/signup', {
     templateUrl: 'signup/signup.html',
     controller: 'SignupCtrl'
+  })
+    .when('/view2', {
+    templateUrl: 'view2/view2.html',
+    controller: 'View2Ctrl'
   });
 }]);

@@ -1,0 +1,20 @@
+<table>
+	<tbody>
+		<tr>
+			<td><input type="text" ng-model="userUpdate.email"></input></td>
+			<td><input type="password" ng-model="userUpdate.password"></input></td>
+			<td><input type="text" ng-model="userUpdate.firstName"></input></td>
+			<td><input type="text" ng-model="userUpdate.lastName"></input></td>
+			<td><select ng-model="userUpdate.role">
+					<option value="USER">User</option>
+					<option value="Manager">Manager</option>
+					<option value="Admin">Admin</option>
+			</select></td>
+			<td><button ng-click="cancel()"
+					style="padding-left: 50px; padding-right: 50px">cancel</button></td>
+			<td><button ng-click="saveUser()"
+					style="padding-left: 50px; padding-right: 50px">save</button></td>
+		</tr>
+	</tbody>
+
+</table>

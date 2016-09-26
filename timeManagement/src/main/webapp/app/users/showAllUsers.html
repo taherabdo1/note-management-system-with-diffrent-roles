@@ -1,0 +1,35 @@
+<table>
+	<thead>
+		<!-- <tr><th colspan="4">Your Notes</th></tr>
+       -->
+		<tr>
+			<th>First Name &nbsp;</th>
+			<th>Last Name &nbsp;</th>
+			<th>Email &nbsp;</th>
+			<th>Role</th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr ng-repeat="user in users">
+			<td>{{user.firstName}} &nbsp;</td>
+			<td>{{user.lastName}} &nbsp;</td>
+			<td>{{user.email}} &nbsp;</td>
+			<td>{{user.role}} &nbsp;</td>
+			<td><button ng-click="deleteUSer($index)" style="padding-left: 50px;
+				padding-right: 50px">delete
+				</button>
+			</td>
+			<td><button ng-click="updateUser($index)" style="padding-left: 50px;
+				padding-right: 50px">update
+				</button>
+							<td><button ng-click="showNotes($index)" style="padding-left: 50px;
+				padding-right: 50px">Show Notes
+				</button>
+			</td>
+		</tr>
+	</tbody>
+</table>
+
+<button ng-click="addUser()" style="padding-left: 50px;
+				padding-right: 50px">add
+				</button>
