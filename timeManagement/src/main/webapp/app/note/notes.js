@@ -24,25 +24,15 @@ app
 						$http(req)
 								.then(
 										function(response) {
-
-
 												$log.log("notes came back");
 												$scope.notes = response.data;
 												$log.log(response.data);
-
-//												$scope.note = response.data;
-										},
-										function(response){
-											$location.path("/login");
 										});
 					};
 					
 					$scope.deleteNote = function(index) {
 						$log.log(index);
 						var noteToBeDeleted = $scope.notes[index];
-						var data = {
-								id : noteToBeDeleted.id
-							};
 						var req = {
 								method : 'POST',
 								url : 'http://localhost:8081/timeManagement/rest/note/delete',
@@ -53,7 +43,6 @@ app
 							
 					};
 
-						// $http.post("http://localhost:8081/timeManagement/rest/note/delete",data)
 						$http(req).then(function(response) {
 							if (response.data.deleted == "true") {
 								$scope.notes.splice(index, 1);

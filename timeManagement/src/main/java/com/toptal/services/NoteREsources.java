@@ -109,14 +109,18 @@ public class NoteREsources {
 					+ user.getEmail());
 			// user.setId(token);
 			List<Note> notes = new ArrayList<Note>(noteDao.getAllOfUser(user));
-			for (Note note : notes) {
-				note.setUser(null);
-			}
-			ObjectMapper mapper = new ObjectMapper();
-			String jsonInString = mapper.writeValueAsString(notes);
+			if(notes.size()>0){
+				for (Note note : notes) {
+					note.setUser(null);
+				}
+				ObjectMapper mapper = new ObjectMapper();
+				String jsonInString = mapper.writeValueAsString(notes);
 
-			System.out.println(notes.get(0).getDescription());
-			return Response.status(Status.OK).entity(jsonInString).build();
+				System.out.println(notes.get(0).getDescription());
+				return Response.status(Status.OK).entity(jsonInString).build();				
+			}else{
+				return Response.status(Status.OK).entity("{}").build();				
+			}
 		} catch (Exception e) {
 			return Response.status(Status.UNAUTHORIZED).entity("").build();
 		}

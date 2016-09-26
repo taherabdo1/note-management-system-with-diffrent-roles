@@ -4,9 +4,10 @@ angular.module('myApp.login', ['ngRoute'])
 
 
 
-.controller('LoginCtrl', function($scope , $http , $log , $rootScope , $location) {
+.controller('LoginCtrl', function($scope , $http , $log , $rootScope , $location, $base64) {
 	
 	$scope.login = function(){
+		$log.log("base64: "+$base64.encode(unescape($scope.password)));
 		var  loginData = {
 				"email" : $scope.email,
 				"password" : $scope.password

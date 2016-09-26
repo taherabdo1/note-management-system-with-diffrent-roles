@@ -2,7 +2,7 @@
 
 angular.module('myApp.signup', ['ngRoute'])
 
-.controller('SignupCtrl', function($scope, $rootScope, $location, $location , $http , $log) {
+.controller('SignupCtrl', function($scope, $rootScope, $location, $location , $http , $log, $base64) {
 
 //	$scope.showSuccessMessage = false;
 
@@ -13,7 +13,7 @@ angular.module('myApp.signup', ['ngRoute'])
 
 		signupRequest = {
 			"email" : $scope.email,
-			"password" : $scope.password,
+			"password" : $base64.encode(unescape($scope.password)),
 			"firstName" : $scope.firstName,
 			"lastName" : $scope.lastName,
 			"role" : "user"

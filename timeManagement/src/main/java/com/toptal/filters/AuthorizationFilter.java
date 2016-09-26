@@ -34,33 +34,12 @@ public class AuthorizationFilter implements ContainerRequestFilter {
 
 		User user = AuthenticationServiceHelper.tokens.get(requestContext
 				.getHeaderString("Authorization"));
-		System.out.println("user token from authorization filter: "
-				+ requestContext.getHeaderString("Authorization"));
-		System.out.println(" and the path is: " + request.getPathInfo());
-
-		System.out.println("Authorization header not equal null:"
-				+ !"p82ls04eh19k998supqotgffut".equals(null));
-		System.out.println("Authorization header != null:"
-				+ ("p82ls04eh19k998supqotgffut" != null));
-		System.out.println("Authorization header not equal null:"
-				+ !"p82ls04eh19k998supqotgffut".equals(""));
-		System.out.println("Authorization header != null:"
-				+ ("p82ls04eh19k998supqotgffut" != ""));
 
 		// if signin or signup don't filter
 		if (request.getPathInfo().equals("/user/signin")
 				|| request.getPathInfo().equals("/user/signup")) {
 			return;
 		}
-		// this means the user is not logged in and request pages other than
-		// signin and signup
-
-		// else if (!"".equals(requestContext.getHeaderString("Authorization"))
-		// &&!requestContext.getHeaderString("Authorization").equals(null)) {
-
-		// System.out.println("user role from authorization filter: ");
-		// System.out.println("user role from authorization filter role: " +
-		// user.getRole());
 		try {
 			// if the user role is ADMIN then he has all the previllages
 			if (user.getRole().equalsIgnoreCase("admin")) {
@@ -90,7 +69,9 @@ public class AuthorizationFilter implements ContainerRequestFilter {
 				requestContext.abortWith(Response.status(
 						Response.Status.UNAUTHORIZED).build());
 			}
-		} catch (NullPointerException ex) {
+		} // this means the user is not logged in and request pages other than
+		// signin and signup
+		catch (NullPointerException ex) {
 			requestContext.abortWith(Response.status(
 					Response.Status.UNAUTHORIZED).build());
 		}
