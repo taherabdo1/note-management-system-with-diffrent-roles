@@ -4,7 +4,7 @@ import model.Note;
 
 
 //this is a wrapper class to hold the new note and the userToken
-public class NoteWithAtoken {
+public class NoteWithAtokenWrapper {
 
 	Note note;
 	String token;

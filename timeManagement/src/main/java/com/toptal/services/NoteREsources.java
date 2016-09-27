@@ -2,7 +2,9 @@ package com.toptal.services;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.StringTokenizer;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
@@ -19,8 +21,10 @@ import model.User;
 import org.codehaus.jackson.map.ObjectMapper;
 
 import utils.AuthenticationServiceHelper;
-import utils.Credentials;
-import utils.NoteWithAtoken;
+import utils.CredentialsWrapper;
+import utils.DateFilterRequestWrapper;
+import utils.DateFilterResponseWrapper;
+import utils.NoteWithAtokenWrapper;
 import utils.Secured;
 
 import com.toptal.dao.*;
@@ -36,8 +40,8 @@ public class NoteREsources {
 	public String add(String noteWithAtokenJsonString) {
 		try {
 			ObjectMapper mapper = new ObjectMapper();
-			NoteWithAtoken noteWithAtoken = mapper.readValue(
-					noteWithAtokenJsonString, NoteWithAtoken.class);
+			NoteWithAtokenWrapper noteWithAtoken = mapper.readValue(
+					noteWithAtokenJsonString, NoteWithAtokenWrapper.class);
 			Note note = noteWithAtoken.getNote();
 			System.out.println("note desc from create resource:"
 					+ note.getDescription());
@@ -164,4 +168,44 @@ public class NoteREsources {
 		}
 	}
 
+	
+	@GET
+	@Path("/filterByStartAndEndDateForUser")
+//	@Consumes(MediaType.APPLICATION_JSON)
+	public Response filterByStartAndEndDateForUser(String filterData) {
+		try{
+	
+			List<DateFilterResponseWrapper> dateFilterResponseWrappers = new ArrayList<>();
+			ObjectMapper mapper = new ObjectMapper();
+			DateFilterRequestWrapper dateFilterRequestWrapper = mapper.readValue(filterData, DateFilterRequestWrapper.class);
+			NoteDao noteDao = new NoteDao();
+			//get User from tokes map
+			User user = AuthenticationServiceHelper.tokens.get(dateFilterRequestWrapper.getUserToken());
+	
+			dateFilterRequestWrapper.getStartDate().setYear(dateFilterRequestWrapper.getStartDate().getYear()-1900);
+			dateFilterRequestWrapper.getStartDate().setYear(dateFilterRequestWrapper.getStartDate().getYear()-1900);
+			List<Object[]> notesGrouped = noteDao.getFilteredNotesByDateForUser(new Date(2016-1900 , 8 , 2), new Date(2016-1900 , 9 , 30), user);
+
+			//go through the data returned to construct a list of DateFilterResponseWrapper
+			DateFilterResponseWrapper dateFilterResponseWrapper;
+			StringTokenizer tokenizer ;
+			for(Object[] row : notesGrouped){
+				dateFilterResponseWrapper = new DateFilterResponseWrapper();
+				dateFilterResponseWrapper.setDate((Date)row[0]);
+				dateFilterResponseWrapper.setTotalPeriod(((Double)row[1]).floatValue());
+				dateFilterResponseWrapper.setNotes(new ArrayList<String>());
+				tokenizer = new StringTokenizer((String)row[2], ",");
+				while(tokenizer.hasMoreTokens()){
+					dateFilterResponseWrapper.getNotes().add(tokenizer.nextToken());
+				}
+				dateFilterResponseWrappers.add(dateFilterResponseWrapper);
+			}
+			String responseJson = mapper.writeValueAsString(dateFilterResponseWrappers);
+			return Response.status(Status.OK).entity(responseJson).build(); 
+		}catch(Exception e){
+			e.printStackTrace();
+			return Response.status(Status.UNAUTHORIZED).entity("").build();
+
+		}
+	}
 }

@@ -24,13 +24,13 @@ import org.codehaus.jackson.map.JsonMappingException;
 import org.codehaus.jackson.map.ObjectMapper;
 
 import utils.AuthenticationServiceHelper;
-import utils.Credentials;
+import utils.CredentialsWrapper;
 
 
 
 
 
-import utils.NoteWithAtoken;
+import utils.NoteWithAtokenWrapper;
 
 
 
@@ -111,7 +111,7 @@ public class UserServices {
 		UserDao userDao = new UserDao();
 		try {
 			ObjectMapper mapper = new ObjectMapper();
-			Credentials userCredentialsObject = mapper.readValue(userCredentials, Credentials.class);
+			CredentialsWrapper userCredentialsObject = mapper.readValue(userCredentials, CredentialsWrapper.class);
 			System.out.println("email:" + userCredentialsObject.getEmail()
 					+ " and password : " + userCredentialsObject.getPassword());
 
@@ -183,5 +183,6 @@ public class UserServices {
 		return "{\"deleted\" : \"false\"}";
 	}
 	}
+
 
 }

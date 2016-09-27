@@ -20,8 +20,8 @@ public class AuthorizationFilter implements ContainerRequestFilter {
 	HttpServletRequest request;
 
 	public static final String[] userPages = { "/note/add", "/note/delete",
-			"/note/update", "/note/getAllOfUser", "/note/getNote",
-			"/user/signup", "/user/signin" };
+			"/note/update", "/note/getAllOfUser", "/note/getNote", "/note/filterByStartAndEndDateForUser",
+			"/user/signup", "/user/signin"};
 
 	public static final String[] managerPages = { "/user/delete",
 			"/user/update", "/user/update", "/user/getAllUsers" };

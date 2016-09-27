@@ -2,7 +2,7 @@ package utils;
 
 import java.io.Serializable;
 
-public class Credentials implements Serializable{
+public class CredentialsWrapper implements Serializable{
 	
 	private String email;
 	private String password;
