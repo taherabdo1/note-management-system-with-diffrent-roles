@@ -142,6 +142,21 @@ public class UserServices {
 			return Response.status(Status.OK).entity("{\"token\":"+"\"null\"}").build();
 		}
 	}
+	
+	//checked
+	@POST
+	@Path("/signout")
+//	@Consumes(MediaType.APPLICATION_JSON)
+//	@Produces(MediaType.APPLICATION_JSON)
+	public String signOut(String userToken) {
+		try {
+			AuthenticationServiceHelper.tokens.remove(userToken);
+			return "{\"response\":\"DONE\"}";// Response.status(Status.OK).build();
+		} catch (Exception e) {
+			// e.printStackTrace();
+			return "{\"response\":\"false\"}"; // Response.status(Status.BAD_REQUEST).build();
+		}
+	}
 
 	@POST
 	@Path("/update")

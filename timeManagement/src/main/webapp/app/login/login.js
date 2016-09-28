@@ -30,10 +30,10 @@ angular.module('myApp.login', ['ngRoute'])
         $scope.note = response.data;
     });
 	};
-	//to prevent from log in if he is already loged in
+	//to prevent from log in if he is already logged in
 	$log.log("from login token from rootScope: "+$rootScope.token);
-	if (typeof ($rootScope.token) != 'undefined'){
-		$location.path("/notes");
+	if (typeof ($rootScope.token) != 'undefined' && ($rootScope.token) != null&& ($rootScope.token) != 'null'){
+//		$location.path("/notes");
 	}
 });
 

@@ -21,7 +21,7 @@ public class AuthorizationFilter implements ContainerRequestFilter {
 
 	public static final String[] userPages = { "/note/add", "/note/delete",
 			"/note/update", "/note/getAllOfUser", "/note/getNote", "/note/filterByStartAndEndDateForUser",
-			"/user/signup", "/user/signin"};
+			"/user/signup", "/user/signin", "/user/signout"};
 
 	public static final String[] managerPages = { "/user/delete",
 			"/user/update", "/user/update", "/user/getAllUsers" };

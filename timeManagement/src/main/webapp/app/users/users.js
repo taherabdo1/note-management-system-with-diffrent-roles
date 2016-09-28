@@ -27,20 +27,20 @@ usersApp.controller('UsersCtrl', function($scope, $rootScope, $http, $log,
 	$scope.showNotes = function(index) {
 		$rootScope.userToShowNotesOf = $scope.users[index];
 		$rootScope.addForAnotherUserAsAmdin = $scope.users[index].email; // used
-																			// to
-																			// save
-																			// the
-																			// email
-																			// of
-																			// the
-																			// user
-																			// who
-																			// will
-																			// the
-																			// note
-																			// be
-																			// assigned
-																			// to
+		// to
+		// save
+		// the
+		// email
+		// of
+		// the
+		// user
+		// who
+		// will
+		// the
+		// note
+		// be
+		// assigned
+		// to
 		$location.path("/notes");
 		$log.log("from the usersCtrl prepare for showNotesOf A user: "
 				+ $rootScope.userToShowNotesOf.email);
@@ -151,4 +151,34 @@ usersApp.controller('AddEditUserCtrl', function($scope, $rootScope, $http,
 
 	}
 });
-//		
+
+// signout controller
+usersApp.controller('SignoutCtrl', function($scope, $rootScope, $http, $log,
+		$location, $routeParams) {
+	$log.log("signout controller");
+	$scope.signout = function() {
+		$log.log("signout funtion");
+		var signoutReq = {
+				method : 'POST',
+				url : 'http://localhost:8081/timeManagement/rest/user/signout',
+				headers : {
+					'Authorization' : $rootScope.token
+				}
+		};
+
+			$http(signoutReq).then(function(response) {
+			if(response.data.response == 'DONE'){
+				$rootScope.token = null;
+				$location.path("/login");
+			}else{
+				$log.log("can't signout after calling server");
+			}
+				
+			},function(response){
+				$log.log("unauthorized to signout");
+			});
+//		$location.path("/login");
+	};
+	$scope.signout();	
+
+});
