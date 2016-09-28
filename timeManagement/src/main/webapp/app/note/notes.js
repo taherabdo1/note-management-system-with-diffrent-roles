@@ -8,40 +8,57 @@ app
 						$routeParams) {
 
 					$log.log("token from the root scope: " + $rootScope.token);
+					// $log.log("user to get notes of from the root scope: " +
+					// $rootScope.userToShowNotesOf);
+
 					$scope.getNotes = function() {
 						var data = {
 							"token" : $rootScope.token
 						};
-						var req = {
-							method : 'POST',
-							url : 'http://localhost:8081/timeManagement/rest/note/getAllOfUser',
-							headers : {
-								'Authorization' : $rootScope.token
-							},
-							data : $rootScope.token
-						};
 
-						$http(req)
-								.then(
-										function(response) {
-												$log.log("notes came back");
-												$scope.notes = response.data;
-												$log.log(response.data);
-										});
+						var req;
+						if (typeof ($rootScope.userToShowNotesOf) != 'undefined') {
+							req = {
+								method : 'POST',
+								url : 'http://localhost:8081/timeManagement/rest/note/getAllNotesOfAnotherUser',
+								headers : {
+									'Authorization' : $rootScope.token
+								},
+								data : $rootScope.userToShowNotesOf.email
+							};
+						} else {
+							req = {
+								method : 'POST',
+								url : 'http://localhost:8081/timeManagement/rest/note/getAllOfUser',
+								headers : {
+									'Authorization' : $rootScope.token
+								},
+								data : $rootScope.token
+							};
+
+						}
+						$http(req).then(function(response) {
+							$log.log("notes came back");
+							$scope.notes = response.data;
+							$log.log(response.data);
+						},function(response){
+							$location.path("/login");
+						});
+						$rootScope.userToShowNotesOf = undefined;
 					};
-					
+
 					$scope.deleteNote = function(index) {
 						$log.log(index);
 						var noteToBeDeleted = $scope.notes[index];
 						var req = {
-								method : 'POST',
-								url : 'http://localhost:8081/timeManagement/rest/note/delete',
-								headers : {
+							method : 'POST',
+							url : 'http://localhost:8081/timeManagement/rest/note/delete',
+							headers : {
 								'Authorization' : $rootScope.token
 							},
 							data : noteToBeDeleted.id
-							
-					};
+
+						};
 
 						$http(req).then(function(response) {
 							if (response.data.deleted == "true") {
@@ -98,7 +115,7 @@ app
 					};
 
 					$scope.cancel = function() {
-						$rootScope.noteToBeUpdated = "newNote";
+						$rootScope.noteToBeUpdated = 'undefined';
 						$location.path("/notes");
 					};
 
@@ -108,33 +125,31 @@ app
 						$log.log($scope.noteUpdate + " from saveNote function");
 
 						var updateNoteReq = {
-								method : 'POST',
-								url : 'http://localhost:8081/timeManagement/rest/note/update',
-								headers : {
+							method : 'POST',
+							url : 'http://localhost:8081/timeManagement/rest/note/update',
+							headers : {
 								'Authorization' : $rootScope.token
 							},
 							data : $scope.noteUpdate
-							
-					};
+
+						};
 						// this for update note
 						if (typeof ($rootScope.noteToBeUpdated) != 'undefined') {
 							$log.log($scope.noteUpdate.description
 									+ " from if statement");
 
-//							$http
-//									.post(
-//											"http://localhost:8081/timeManagement/rest/note/update",
-//											$scope.noteUpdate)
-							$http(updateNoteReq).then(
-											function(response) {
-												if (response.data.updated == "true") {
-													$rootScope.noteToBeUpdated = null;
-													$location.path("/notes");
-												} else {
-													$log
-															.log("can't be update the note");
-												}
-											});
+							// $http
+							// .post(
+							// "http://localhost:8081/timeManagement/rest/note/update",
+							// $scope.noteUpdate)
+							$http(updateNoteReq).then(function(response) {
+								if (response.data.updated == "true") {
+									$rootScope.noteToBeUpdated = null;
+									$location.path("/notes");
+								} else {
+									$log.log("can't be update the note");
+								}
+							});
 						} else {
 							// means you
 							// gonna
@@ -143,28 +158,52 @@ app
 
 							$log.log($scope.noteUpdate.description
 									+ "from else");
-							var newNoteReq = {
+
+							var newNoteReq;
+							// check if you are gonna add the new note for
+							// another user if you are admin
+							if ($rootScope.addForAnotherUserAsAmdin != 'undefined') {
+								$log
+										.log("email of the user to add note to is: "
+												+ $rootScope.addForAnotherUserAsAmdin);
+								newNoteReq = {
 									method : 'POST',
 									url : 'http://localhost:8081/timeManagement/rest/note/add',
 									headers : {
-									'Authorization' : $rootScope.token
-								},
-								data : {'note': $scope.noteUpdate,
-										'token': $rootScope.token
-								}
-								
-						};
+										'Authorization' : $rootScope.token
+									},
+									data : {
+										'note' : $scope.noteUpdate,
+										'token' : $rootScope.addForAnotherUserAsAmdin
+									}
 
-							$http(newNoteReq).then(
-											function(response) {
-												if (response.data.added == "true") {
-													$rootScope.noteToBeUpdated = null;
-													$location.path("/notes");
-												} else {
-													$log
-															.log("can't be create the note");
-												}
-											});
+								};
+
+							} else { // add the note for the logged in user
+
+								newNoteReq = {
+									method : 'POST',
+									url : 'http://localhost:8081/timeManagement/rest/note/add',
+									headers : {
+										'Authorization' : $rootScope.token
+									},
+									data : {
+										'note' : $scope.noteUpdate,
+										'token' : $rootScope.token
+									}
+								};
+							}
+
+							$http(newNoteReq).then(function(response) {
+								if (response.data.added == "true") {
+									$rootScope.noteToBeUpdated = null;
+									$location.path("/notes");
+								} else {
+									$log.log("can't be create the note");
+								}
+							});
+							
+							$rootScope.addForAnotherUserAsAmdin = 'undefined';
 						}
 					};
 
@@ -173,4 +212,41 @@ app
 						$scope.initializeForEdit();
 
 					}
+				});
+
+app
+		.controller(
+				'filterNoteCtrl',
+				function($scope, $rootScope, $http, $log, $location,
+						$routeParams, $filter) {
+
+					if (typeof ($rootScope.token) == 'undefined') {
+						$log.log("no token, the user is not logged in yet");
+						$location.path("/login");
+
+					}
+					$log.log("inside filter function");
+
+					$scope.filterNotes = function() {
+						var filterReq = {
+							method : 'POST',
+							url : 'http://localhost:8081/timeManagement/rest/note/filterByStartAndEndDateForUser',
+							headers : {
+								'Authorization' : $rootScope.token
+							},
+							data : {
+								'startDate' : $scope.startDate,
+								'endDate' : $scope.endDate,
+								'userToken' : $rootScope.token
+							}
+
+						};
+
+						$http(filterReq).then(function(response) {
+							$scope.rows = response.data;
+							$log.log("notes: " + response.data[0].notes[0]);
+						}, function(response) {
+							$log.log("unauthorized");
+						});
+					};
 				});

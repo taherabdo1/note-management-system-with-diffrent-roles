@@ -26,6 +26,7 @@ import utils.DateFilterRequestWrapper;
 import utils.DateFilterResponseWrapper;
 import utils.NoteWithAtokenWrapper;
 import utils.Secured;
+import utils.Util;
 
 import com.toptal.dao.*;
 import com.toptal.filters.AuthenticationFilter;
@@ -45,15 +46,20 @@ public class NoteREsources {
 			Note note = noteWithAtoken.getNote();
 			System.out.println("note desc from create resource:"
 					+ note.getDescription());
-
-			// use userToken to get the user data
-			User user = AuthenticationServiceHelper.tokens.get(noteWithAtoken.getToken());
-
-
+			
 			UserDao userDao = new UserDao();
+			User user;
+			//if the token is email use the user whose email is this
+			System.out.println(Util.isEmail(noteWithAtoken.getToken())+" sent to add note to and it is email");
+			if(Util.isEmail(noteWithAtoken.getToken())){
+				user = userDao.findByEmail(noteWithAtoken.getToken());
+				System.out.println("user email to put the note for is: "+ user.getEmail());
+			}else{	// the token is not email then use the token to get the user from tokens map
+				user = AuthenticationServiceHelper.tokens.get(noteWithAtoken.getToken());	
+				System.out.println("user email from a token to put the note for is: "+ user.getEmail());
+
+			}
 			NoteDao noteDao = new NoteDao();
-//			// use the token to get User
-//			user = userDao.findByEmail("abdo@gmail.com");
 			note.setUser(user);
 			noteDao.persist(note);
 			return "{\"added\" : \"true\"}";
@@ -131,6 +137,37 @@ public class NoteREsources {
 
 	}
 
+	@POST
+	@Path("/getAllNotesOfAnotherUser")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response getAllNotesOfAnotherUser(String email) {
+		NoteDao noteDao = new NoteDao();
+		try {
+//			System.out.println("token from getAllOfUser:" + token);
+//			// temp to be updated from the token map
+			User user = new User();
+			user.setEmail(email);
+			// user.setId(token);
+			List<Note> notes = new ArrayList<Note>(noteDao.getAllOfUser(user));
+			if(notes.size()>0){
+				for (Note note : notes) {
+					note.setUser(null);
+				}
+				ObjectMapper mapper = new ObjectMapper();
+				String jsonInString = mapper.writeValueAsString(notes);
+
+				System.out.println(notes.get(0).getDescription());
+				return Response.status(Status.OK).entity(jsonInString).build();				
+			}else{
+				return Response.status(Status.OK).entity("{}").build();				
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			return Response.status(Status.UNAUTHORIZED).entity("").build();
+		}
+
+	}
+	
 	@GET
 	@Path("/getAll")
 	public String getAll() {
@@ -169,7 +206,7 @@ public class NoteREsources {
 	}
 
 	
-	@GET
+	@POST
 	@Path("/filterByStartAndEndDateForUser")
 //	@Consumes(MediaType.APPLICATION_JSON)
 	public Response filterByStartAndEndDateForUser(String filterData) {

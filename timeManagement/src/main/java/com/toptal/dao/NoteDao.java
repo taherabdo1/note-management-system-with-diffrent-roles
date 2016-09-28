@@ -46,8 +46,8 @@ public class NoteDao extends AbstractDaoImpl<Note> {
 
 			List<Note> list = (List<Note>) em
 					.createQuery(
-							" select n from Note n Where n.user.id = :userId")
-					.setParameter("userId", user.getId()).getResultList();
+							" select n from Note n Where n.user.email = :userEmail")
+					.setParameter("userEmail", user.getEmail()).getResultList();
 			em.getTransaction().commit();
 			em.close();
 			return list;

@@ -27,7 +27,11 @@ angular.module('myApp', [
     templateUrl: 'note/showNotes.html',
     controller: 'NotesCtrl'
   })
-  .when('/addEditNote', {
+  .when('/filterNotes', {
+    templateUrl: 'note/filterNotes.html',
+    controller: 'filterNoteCtrl'
+  })
+    .when('/addEditNote', {
     templateUrl: 'note/addEditNote.html',
     controller: 'addEditNoteCtrl'
   })

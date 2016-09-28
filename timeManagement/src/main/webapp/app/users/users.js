@@ -24,6 +24,27 @@ usersApp.controller('UsersCtrl', function($scope, $rootScope, $http, $log,
 			$location.path("/notes");
 		});
 	};
+	$scope.showNotes = function(index) {
+		$rootScope.userToShowNotesOf = $scope.users[index];
+		$rootScope.addForAnotherUserAsAmdin = $scope.users[index].email; // used
+																			// to
+																			// save
+																			// the
+																			// email
+																			// of
+																			// the
+																			// user
+																			// who
+																			// will
+																			// the
+																			// note
+																			// be
+																			// assigned
+																			// to
+		$location.path("/notes");
+		$log.log("from the usersCtrl prepare for showNotesOf A user: "
+				+ $rootScope.userToShowNotesOf.email);
+	};
 	$scope.deleteUSer = function(index) {
 		var userToBeDeleted = $scope.users[index];
 
@@ -111,7 +132,7 @@ usersApp.controller('AddEditUserCtrl', function($scope, $rootScope, $http,
 				headers : {
 					'Authorization' : $rootScope.token
 				},
-				data :  $scope.userUpdate	
+				data : $scope.userUpdate
 			};
 
 			$http(newUserReq).then(function(response) {
