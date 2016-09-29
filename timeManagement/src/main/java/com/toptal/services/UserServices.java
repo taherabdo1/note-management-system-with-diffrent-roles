@@ -1,47 +1,26 @@
 package com.toptal.services;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
-import javax.ws.rs.QueryParam;
-import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
 import model.*;
 
-import org.codehaus.jackson.JsonGenerationException;
-import org.codehaus.jackson.map.JsonMappingException;
 import org.codehaus.jackson.map.ObjectMapper;
 
 import utils.AuthenticationServiceHelper;
 import utils.CredentialsWrapper;
 
 
-
-
-
-import utils.NoteWithAtokenWrapper;
-
-
-
-
-
-
-
-//import com.google.gson.Gson;
-//import com.google.gson.Gson;
 import com.toptal.dao.UserDao;
-import com.toptal.filters.AuthenticationFilter;
 
 @Path("/user")
 public class UserServices {
@@ -121,7 +100,7 @@ public class UserServices {
 			}
 			User loggedUser = userDao.signIn(userCredentialsObject.getEmail(),
 					userCredentialsObject.getPassword());
-			loggedUser.setNotes(new ArrayList());
+			loggedUser.setNotes(new ArrayList<Note>());
 			//issue a token and relate it to the user in the map inside Authentication filter
 			String token = AuthenticationServiceHelper.getToken();
 			while (AuthenticationServiceHelper.tokens.get(token) != null) {

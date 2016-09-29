@@ -1,16 +1,20 @@
-
-<input type="date" ng-model="startDate" required/>
-<input type="date" ng-model="endDate" required/>
+From:
+<input type="date" ng-model="startDate" required />
+To:
+<input type="date" ng-model="endDate" required />
 <button ng-click="filterNotes()"
 	style="padding-left: 50px; padding-right: 50px">filter</button>
-
+<br />
 
 Notes of: {{userName}}
 <br />
-<P ng-repeat="row in rows">
-	date: {{row.date}}: <br /> total time: {{row.totalPeriod}}<br /> <b>Notes:</b><br />
-<ul>
-	<li ng-repeat="note in notes">{{note}}</li>
-</ul>
-</p>
+<div ng-repeat="row in rows">
+	date: {{row.date}}: <br /> total time: {{row.totalPeriod}} h<br />
+	Notes:<br />
+
+	<ul>
+		<li ng-repeat="n in row.notes">{{n}}</li>
+	</ul>
+</div>
+
 

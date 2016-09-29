@@ -4,6 +4,8 @@ import java.io.Serializable;
 
 import javax.persistence.*;
 
+import com.sun.istack.Nullable;
+
 import java.sql.Time;
 import java.util.Date;
 
@@ -25,6 +27,7 @@ public class Note extends GenericEntity implements Serializable {
 
 	private float period;
 
+	@Nullable
 	@Column(name="preferred_working_hour_per_day")
 	private Time preferredWorkingHourPerDay;
 

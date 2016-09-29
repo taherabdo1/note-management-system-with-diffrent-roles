@@ -21,20 +21,16 @@ import model.User;
 import org.codehaus.jackson.map.ObjectMapper;
 
 import utils.AuthenticationServiceHelper;
-import utils.CredentialsWrapper;
 import utils.DateFilterRequestWrapper;
 import utils.DateFilterResponseWrapper;
 import utils.NoteWithAtokenWrapper;
-import utils.Secured;
 import utils.Util;
 
 import com.toptal.dao.*;
-import com.toptal.filters.AuthenticationFilter;
 
 @Path("/note")
 public class NoteREsources {
 
-	// to be upodated
 	@POST
 	@Path("/add")
 	// @Consumes(MediaType.APPLICATION_JSON)
