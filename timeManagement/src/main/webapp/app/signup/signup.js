@@ -31,9 +31,12 @@ angular.module('myApp.signup', ['ngRoute'])
     });
 	};
 	
-	//to prevent from log in if he is already loged in
-	$log.log("from login token from rootScope: "+$rootScope.token);
-	if (typeof ($rootScope.token) != 'undefined'){
+//	$scope.signupFormValid = function(){
+//		
+//	};
+	
+	if ($rootScope.token != 'undefined' && typeof($rootScope.token) != 'undefined'){
+		$log.log("from signout: " + $rootScope.token);
 		$location.path("/notes");
 	}
 });

@@ -62,6 +62,8 @@ public class NoteDao extends AbstractDaoImpl<Note> {
 	public List<Object[]> getFilteredNotesByDateForUser(Date startDate,
 			Date endDate, User user) {
 
+		System.out.println(startDate + " start date *********");
+		System.out.println(endDate+ " end date *********");
 		EntityManager em;
 		try {
 			em = getEntityManager();

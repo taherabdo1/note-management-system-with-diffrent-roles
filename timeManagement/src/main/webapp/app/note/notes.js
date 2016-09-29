@@ -5,7 +5,7 @@ app
 		.controller(
 				'NotesCtrl',
 				function($scope, $rootScope, $http, $log, $location,
-						$routeParams) {
+						$routeParams, $filter) {
 
 					$log.log("token from the root scope: " + $rootScope.token);
 					// $log.log("user to get notes of from the root scope: " +
@@ -37,13 +37,40 @@ app
 							};
 
 						}
-						$http(req).then(function(response) {
-							$log.log("notes came back");
-							$scope.notes = response.data;
-							$log.log(response.data);
-						},function(response){
-							$location.path("/login");
-						});
+						$http(req)
+								.then(
+										function(response) {
+											$log.log("notes came back");
+											$scope.notes = response.data;
+											$scope.current_date_format_ddMMyyyy = $filter(
+													'date')(new Date(),
+													'yyyy-MM-dd');
+											$scope.current_date_format_HHMMSS = $filter(
+													'date')(new Date(),
+													'HH:mm:ss');
+
+											$scope.prefared_date_format_HHMMSS = $filter(
+													'date')
+													(
+															response.data[0].preferredWorkingHourPerDay,
+															'HH:mm:ss');
+											$scope.notes[0].temp = "test temp";
+											$scope.endTime = new Date(response.data[0].startDate
+													+ ' '
+													+ response.data[0].preferredWorkingHourPerDay)//.setHours(response.data[0].period);
+											$scope.endTime.setHours($scope.endTime.getHours()+response.data[0].period);
+											$log.log("end Date hours: " +$scope.endTime.getHours());
+											var regExp = /(\d{1,2})\:(\d{1,2})\:(\d{1,2})/;
+											if ($scope.current_date_format_ddMMyyyy == response.data[0].startDate&&(parseInt($scope.current_date_format_HHMMSS
+													.replace(regExp, "$1$2$3")) > parseInt(response.data[0].preferredWorkingHourPerDay
+													.replace(regExp, "$1$2$3"))) && $filter('date')($scope.endTime,'HH:mm:ss')> $scope.current_date_format_HHMMSS) {
+												$log
+														.log("prefered after the current time and end lesa magatsh");
+											}
+
+										}, function(response) {
+											$location.path("/login");
+										});
 						$rootScope.userToShowNotesOf = undefined;
 					};
 
@@ -123,7 +150,6 @@ app
 						$log.log("inside save function");
 
 						$log.log($scope.noteUpdate + " from saveNote function");
-
 						var updateNoteReq = {
 							method : 'POST',
 							url : 'http://localhost:8081/timeManagement/rest/note/update',
@@ -157,12 +183,12 @@ app
 							// new note
 
 							$log.log($scope.noteUpdate.description
-									+ "from else");
+									+ " from else");
 
 							var newNoteReq;
 							// check if you are gonna add the new note for
 							// another user if you are admin
-							if ($rootScope.addForAnotherUserAsAmdin != 'undefined') {
+							if (typeof ($rootScope.addForAnotherUserAsAmdin) != 'undefined') {
 								$log
 										.log("email of the user to add note to is: "
 												+ $rootScope.addForAnotherUserAsAmdin);
@@ -202,16 +228,19 @@ app
 									$log.log("can't be create the note");
 								}
 							});
-							
+
 							$rootScope.addForAnotherUserAsAmdin = 'undefined';
 						}
 					};
 
+					// if(typeof ($rootScope.token) == 'undefined'){
+					// $location.path("/login");
+					// }
 					if (typeof ($rootScope.noteToBeUpdated) != 'undefined') {
 						$log.log("pre-initialize");
 						$scope.initializeForEdit();
-
 					}
+
 				});
 
 app

@@ -9,28 +9,34 @@
 				<div class="col-md-7 col-md-offset-4">
 					<h2 class="section-title">Sign Up</h2>
 
-					<form name="signupForm" method="post" class="contact-form">
+					<form name="signupForm" method="post" class="contact-form" novalidate ng-submit="signupForm.$valid && submit()">
 
 						<div class="row">
 							<div class="col-md-6">
 								<input ng-model="firstName" type="text" placeholder="First Name..." required />
 							</div>
-							<div class="col-md-5" style="padding: 10px"></div>
+							<div class="col-md-5" style="padding: 10px"> <span style="color:red" ng-show="signupForm.firstName.$dirty &&signupForm.firstName.$invalid">
+							  <span>FirstName is required.</span>
+ 							 </span></div>
 						</div>
 						
 						<div class="row">
 							<div class="col-md-6">
 								<input ng-model="lastName" type="text" placeholder="Last Name..." required />
 							</div>
-							<div class="col-md-5" style="padding: 10px"></div>
+							<div class="col-md-5" style="padding: 10px"> <span style="color:red" ng-show="signupForm.lastName.$dirty &&signupForm.lastName.$invalid">
+  <span ng-show="signupForm.lastName.$error.required">FirstName is required.</span>
+  </span></div>
 						</div>
 						<div class="row">
 							<div class="col-md-6">
 								<input ng-model="email" type="email"
 									placeholder="Email Addresss..." required />
 							</div>
-							<div class="col-md-5" style="padding: 10px"></div>
-						</div>
+  <span style="color:red" ng-show="signupForm.email.$dirty && signupForm.email.$invalid">
+  <span ng-show="signupForm.email.$error.required">Email is required.</span>
+  <span ng-show="signupForm.email.$error.email">Invalid email address.</span>
+  </span>						</div>
 
 						<div class="row">
 							<div class="col-md-6">

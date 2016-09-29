@@ -5,15 +5,13 @@
 	style="padding-left: 50px; padding-right: 50px">filter</button>
 
 
-Note of: {{userName}}<br/>
-
-<Png-repeat="row in rows">
-	date: {{row.date}}: <br /> 
-	total time: {{row.totalPeriod}}<br />
-	notes: <br/>
-	<ul ng-repeat="note in row.notes">
-		<li>{{note}}</li>
-	</ul>
+Notes of: {{userName}}
+<br />
+<P ng-repeat="row in rows">
+	date: {{row.date}}: <br /> total time: {{row.totalPeriod}}<br /> <b>Notes:</b><br />
+<ul>
+	<li ng-repeat="note in notes">{{note}}</li>
+</ul>
 </p>
 
 <!-- <p>Date = {{ startDate}}</p> -->

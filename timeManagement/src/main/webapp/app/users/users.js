@@ -168,7 +168,7 @@ usersApp.controller('SignoutCtrl', function($scope, $rootScope, $http, $log,
 
 			$http(signoutReq).then(function(response) {
 			if(response.data.response == 'DONE'){
-				$rootScope.token = null;
+				$rootScope.token = 'undefined';
 				$location.path("/login");
 			}else{
 				$log.log("can't signout after calling server");

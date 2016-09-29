@@ -9,6 +9,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 import javax.persistence.PersistenceException;
+import javax.validation.ConstraintViolationException;
 
 public abstract class AbstractDaoImpl<T> implements AbstractDao<T> {
 
@@ -46,7 +47,7 @@ public abstract class AbstractDaoImpl<T> implements AbstractDao<T> {
 	}
 
 	@Override
-	public T persist(T entity) {
+	public T persist(T entity) throws PersistenceException{
 		try {
 			em = getEntityManager();
 			em.getTransaction().begin();
@@ -56,7 +57,7 @@ public abstract class AbstractDaoImpl<T> implements AbstractDao<T> {
 			em.close();
 			return entity;
 		} catch (PersistenceException ex) { // to log the exception
-			log.log(Level.SEVERE, "unable to update " + type.getSimpleName(),
+			log.log(Level.SEVERE, "unable to persist " + type.getSimpleName(),
 					ex);
 			throw ex;
 		}
@@ -72,7 +73,7 @@ public abstract class AbstractDaoImpl<T> implements AbstractDao<T> {
 			em.getTransaction().commit();
 			em.close();
 			return entity;
-		} catch (PersistenceException ex) { // to log the exception
+		} catch (ConstraintViolationException ex) { // to log the exception
 			log.log(Level.SEVERE, "unable to update " + type.getSimpleName(),
 					ex);
 			throw ex;
@@ -89,7 +90,7 @@ public abstract class AbstractDaoImpl<T> implements AbstractDao<T> {
 			em.flush();
 			em.getTransaction().commit();
 			em.close();
-		} catch (PersistenceException ex) {
+		} catch (ConstraintViolationException ex) {
 			log.log(Level.SEVERE, "unable to persist " + type.getSimpleName(),
 					ex);
 			throw ex;
@@ -108,7 +109,7 @@ public abstract class AbstractDaoImpl<T> implements AbstractDao<T> {
 			em.getTransaction().commit();
 			em.close();
 			return list;
-		} catch (PersistenceException ex) { // to log the exception
+		} catch (Exception ex) { // to log the exception
 			log.log(Level.SEVERE, "unable to getAll " + type.getSimpleName(),
 					ex);
 			throw ex;

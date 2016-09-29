@@ -7,7 +7,7 @@ angular.module('myApp.login', ['ngRoute'])
 .controller('LoginCtrl', function($scope , $http , $log , $rootScope , $location) {
 	
 	$scope.login = function(){
-//		$log.log("base64: "+$base64.encode(unescape($scope.password)));
+//		$log.log("base64: "+$base64.encode($scope.password));
 		var  loginData = {
 				"email" : $scope.email,
 				"password" : $scope.password
@@ -32,9 +32,11 @@ angular.module('myApp.login', ['ngRoute'])
 	};
 	//to prevent from log in if he is already logged in
 	$log.log("from login token from rootScope: "+$rootScope.token);
-	if (typeof ($rootScope.token) != 'undefined' && ($rootScope.token) != null&& ($rootScope.token) != 'null'){
-//		$location.path("/notes");
+	if ($rootScope.token != 'undefined' && typeof($rootScope.token) != 'undefined'){
+		$log.log("from login: " + $rootScope.token);
+		$location.path("/notes");
 	}
+
 });
 
 
