@@ -4,12 +4,9 @@ angular.module('myApp.signup', ['ngRoute'])
 
 .controller('SignupCtrl', function($scope, $rootScope, $location, $location , $http , $log) {
 
-//	$scope.showSuccessMessage = false;
 
 	$scope.signup = function(){
 		$log.log("test");
-
-//		if(!$scope.signupFormValid) return;
 
 		signupRequest = {
 			"email" : $scope.email,
@@ -30,10 +27,6 @@ angular.module('myApp.signup', ['ngRoute'])
 			}
     });
 	};
-	
-//	$scope.signupFormValid = function(){
-//		
-//	};
 	
 	if ($rootScope.token != 'undefined' && typeof($rootScope.token) != 'undefined'){
 		$log.log("from signout: " + $rootScope.token);

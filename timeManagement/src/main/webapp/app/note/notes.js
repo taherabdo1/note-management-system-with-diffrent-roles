@@ -42,31 +42,6 @@ app
 										function(response) {
 											$log.log("notes came back");
 											$scope.notes = response.data;
-											$scope.current_date_format_ddMMyyyy = $filter(
-													'date')(new Date(),
-													'yyyy-MM-dd');
-											$scope.current_date_format_HHMMSS = $filter(
-													'date')(new Date(),
-													'HH:mm:ss');
-
-											$scope.prefared_date_format_HHMMSS = $filter(
-													'date')
-													(
-															response.data[0].preferredWorkingHourPerDay,
-															'HH:mm:ss');
-											$scope.notes[0].temp = "test temp";
-											$scope.endTime = new Date(response.data[0].startDate
-													+ ' '
-													+ response.data[0].preferredWorkingHourPerDay)//.setHours(response.data[0].period);
-											$scope.endTime.setHours($scope.endTime.getHours()+response.data[0].period);
-											$log.log("end Date hours: " +$scope.endTime.getHours());
-											var regExp = /(\d{1,2})\:(\d{1,2})\:(\d{1,2})/;
-											if ($scope.current_date_format_ddMMyyyy == response.data[0].startDate&&(parseInt($scope.current_date_format_HHMMSS
-													.replace(regExp, "$1$2$3")) > parseInt(response.data[0].preferredWorkingHourPerDay
-													.replace(regExp, "$1$2$3"))) && $filter('date')($scope.endTime,'HH:mm:ss')> $scope.current_date_format_HHMMSS) {
-												$log
-														.log("prefered after the current time and end lesa magatsh");
-											}
 
 										}, function(response) {
 											$location.path("/login");
@@ -111,6 +86,36 @@ app
 						$log.log("add note method");
 						$rootScope.noteToBeUpdated = undefined;
 						$location.path("/addEditNote");
+					};
+					
+					$scope.set_color  = function(note){
+						$log.log("set_color function");
+						$scope.current_date_format_ddMMyyyy = $filter(
+								'date')(new Date(),
+								'yyyy-MM-dd');
+						$scope.current_date_format_HHMMSS = $filter(
+								'date')(new Date(),
+								'HH:mm:ss');
+
+						$scope.prefared_date_format_HHMMSS = $filter(
+								'date')
+								(
+										note.preferredWorkingHourPerDay,
+										'HH:mm:ss');
+						$scope.endTime = new Date(note.startDate
+								+ ' '
+								+ note.preferredWorkingHourPerDay);//.setHours(response.data[0].period);
+						$scope.endTime.setHours($scope.endTime.getHours()+note.period);
+						$log.log("end Date hours: " +$scope.endTime.getHours());
+						var regExp = /(\d{1,2})\:(\d{1,2})\:(\d{1,2})/;
+						if ($scope.current_date_format_ddMMyyyy == note.startDate&&(parseInt($scope.current_date_format_HHMMSS
+								.replace(regExp, "$1$2$3")) > parseInt(note.preferredWorkingHourPerDay
+								.replace(regExp, "$1$2$3"))) && $filter('date')($scope.endTime,'HH:mm:ss')> $scope.current_date_format_HHMMSS) 
+						{
+							$log
+							.log("prefered after the current time and end lesa magatsh");
+							return { color: "green" };
+						}
 					};
 
 					$scope.getNotes();
@@ -163,6 +168,10 @@ app
 						if (typeof ($rootScope.noteToBeUpdated) != 'undefined') {
 							$log.log($scope.noteUpdate.description
 									+ " from if statement");
+							if($rootScope.noteToBeUpdated.preferredWorkingHourPerDay==null){
+								$log.log("initialize the prefered time");
+								$rootScope.noteToBeUpdated.preferredWorkingHourPerDay='00:00:00';
+							}
 
 							// $http
 							// .post(
@@ -184,6 +193,10 @@ app
 
 							$log.log($scope.noteUpdate.description
 									+ " from else");
+							if($scope.noteUpdate.preferredWorkingHourPerDay==null){
+								$log.log("initialize the prefered time");
+								$scope.noteUpdate.preferredWorkingHourPerDay='00:00:00';
+							}
 
 							var newNoteReq;
 							// check if you are gonna add the new note for
@@ -207,6 +220,7 @@ app
 
 							} else { // add the note for the logged in user
 
+							$log.log("add note for the logged in user and the token is:" + $rootScope.token);
 								newNoteReq = {
 									method : 'POST',
 									url : 'http://localhost:8081/timeManagement/rest/note/add',
@@ -232,6 +246,8 @@ app
 							$rootScope.addForAnotherUserAsAmdin = 'undefined';
 						}
 					};
+					
+					
 
 					// if(typeof ($rootScope.token) == 'undefined'){
 					// $location.path("/login");

@@ -1,6 +1,6 @@
 
-<input type="date" ng-model="startDate" />
-<input type="date" ng-model="endDate" />
+<input type="date" ng-model="startDate" required/>
+<input type="date" ng-model="endDate" required/>
 <button ng-click="filterNotes()"
 	style="padding-left: 50px; padding-right: 50px">filter</button>
 
@@ -14,11 +14,3 @@ Notes of: {{userName}}
 </ul>
 </p>
 
-<!-- <p>Date = {{ startDate}}</p> -->
-
-<!-- {{startDate2}} -->
-
-
-<!-- <p>Date = {{ endDate | date: "yyyy-MM-dd" }}</p> -->
-
-<!-- {{startDate3}} -->

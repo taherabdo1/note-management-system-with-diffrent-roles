@@ -7,7 +7,6 @@ angular.module('myApp.login', ['ngRoute'])
 .controller('LoginCtrl', function($scope , $http , $log , $rootScope , $location) {
 	
 	$scope.login = function(){
-//		$log.log("base64: "+$base64.encode($scope.password));
 		var  loginData = {
 				"email" : $scope.email,
 				"password" : $scope.password
@@ -17,7 +16,6 @@ angular.module('myApp.login', ['ngRoute'])
     		if (response.data.token == "null") {
 	    		$log.log("error");
     			$scope.successMessage = "Invalid email and password";
-//				$location.path("/login");
 			} else {
 				$rootScope.token = response.data.token;
 				$rootScope.userName = $scope.email;
